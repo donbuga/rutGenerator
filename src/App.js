@@ -39,7 +39,6 @@ const RutGenerator = () => {
 
   const copyToClipboard = (rut) => {
     navigator.clipboard.writeText(rut).then(() => {
-      alert(`RUT copiado: ${rut}`);
       setUsedRuts((prev) => [...prev, rut]);
     });
   };
@@ -88,7 +87,7 @@ const RutGenerator = () => {
         </div>
       </main>
       <footer className="bg-gray-200 text-center py-4 mt-6">
-        <p className="text-sm text-gray-600">Generador de RUTs &copy; 2025</p>
+        <p className="text-sm text-gray-600">Generador de RUTs &copy; 2025 / bugaDev</p>
       </footer>
     </div>
   );
