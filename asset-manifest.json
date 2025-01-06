@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/rutGenerator/static/css/main.63a18249.css",
-    "main.js": "/rutGenerator/static/js/main.0b156eb2.js",
+    "main.js": "/rutGenerator/static/js/main.37aca20c.js",
     "static/js/453.4434bf6a.chunk.js": "/rutGenerator/static/js/453.4434bf6a.chunk.js",
     "index.html": "/rutGenerator/index.html",
     "main.63a18249.css.map": "/rutGenerator/static/css/main.63a18249.css.map",
-    "main.0b156eb2.js.map": "/rutGenerator/static/js/main.0b156eb2.js.map",
+    "main.37aca20c.js.map": "/rutGenerator/static/js/main.37aca20c.js.map",
     "453.4434bf6a.chunk.js.map": "/rutGenerator/static/js/453.4434bf6a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.63a18249.css",
-    "static/js/main.0b156eb2.js"
+    "static/js/main.37aca20c.js"
   ]
 }
