@@ -7,8 +7,8 @@ interface RutTableProps {
 }
 
 const RutTable: React.FC<RutTableProps> = ({ rutsByPrefix, usedRuts, onCopy }) => (
-  <div className="overflow-auto">
-    <table className="table-auto w-full bg-white shadow-md rounded">
+  <div className="overflow-auto w-full justify-center flex">
+    <table className="table-auto bg-white shadow-md rounded">
       <thead className="bg-gray-200 text-gray-600">
         <tr>
           {Object.keys(rutsByPrefix).map((prefix) => (
@@ -17,7 +17,7 @@ const RutTable: React.FC<RutTableProps> = ({ rutsByPrefix, usedRuts, onCopy }) =
         </tr>
       </thead>
       <tbody>
-        {Array.from({ length: 20 }, (_, rowIndex) => (
+        {Array.from({ length: 10 }, (_, rowIndex) => (
           <tr key={rowIndex} className="hover:bg-gray-100">
             {Object.keys(rutsByPrefix).map((prefix) => (
               <td

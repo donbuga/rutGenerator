@@ -2,37 +2,49 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 import RutTable from './components/RutTable';
 import Footer from './components/Footer';
-import { generateRut } from './utils/rutUtils';
+import { generateRut, calculateDV } from './utils/rutUtils';
 
 const App: React.FC = () => {
   const [rutsByPrefix, setRutsByPrefix] = useState<Record<number, string[]>>({
     8: [],
-    12: [],
-    14: [],
+    15: [],
     18: [],
-    20: [],
+    22: [], // Nueva columna
   });
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
 
   const generateRutList = () => {
-    const prefixes = [8, 12, 14, 18, 20];
+    const prefixes = [8, 15, 18, 22]; // Agregar prefijo 22
     const newRuts: Record<number, string[]> = {};
+
     prefixes.forEach((prefix) => {
-      newRuts[prefix] = Array.from({ length: 20 }, () => generateRut(prefix));
+      newRuts[prefix] = Array.from({ length: 10 }, () => {
+        if (prefix === 22) {
+          // Generar un RUT con el prefijo 22 y DV fijo en 8
+          let rut;
+          do {
+            const baseRut = prefix * 1000000 + Math.floor(Math.random() * 1000000);
+            rut = `${baseRut}-${calculateDV(baseRut)}`;
+          } while (!rut.endsWith('-8')); // Asegurar que termine en -8
+          return rut;
+        }
+        return generateRut(prefix);
+      });
     });
+
     setRutsByPrefix(newRuts);
-    setUsedRuts([]); // Reset the used RUTs when regenerating the list
+    setUsedRuts([]); // Resetear RUTs usados
   };
+
+  React.useEffect(() => {
+  generateRutList();
+  }, []);
 
   const copyToClipboard = (rut: string) => {
     navigator.clipboard.writeText(rut).then(() => {
       setUsedRuts((prev) => [...prev, rut]);
     });
   };
-
-  React.useEffect(() => {
-    generateRutList();
-  }, [])
 
   return (
     <div className="font-sans text-gray-800 bg-gray-100 min-h-screen">
