@@ -9,17 +9,26 @@ const App: React.FC = () => {
     8: [],
     15: [],
     18: [],
-    22: [], // Nueva columna
+    20: [],
+    22: [],
   });
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
 
   const generateRutList = () => {
-    const prefixes = [8, 15, 18, 22]; // Agregar prefijo 22
+    const prefixes = [8, 15, 18, 20,22]; // Agregar prefijo 22
     const newRuts: Record<number, string[]> = {};
 
     prefixes.forEach((prefix) => {
       newRuts[prefix] = Array.from({ length: 10 }, () => {
-        if (prefix === 22) {
+        if (prefix === 20) {
+          // Generar un RUT con el prefijo 20 y DV fijo en 0
+          let rut;
+          do {
+            const baseRut = prefix * 1000000 + Math.floor(Math.random() * 1000000);
+            rut = `${baseRut}-${calculateDV(baseRut)}`;
+          } while (!rut.endsWith('-0')); // Asegurar que termine en -0
+          return rut;
+        }if (prefix === 22) {
           // Generar un RUT con el prefijo 22 y DV fijo en 8
           let rut;
           do {
