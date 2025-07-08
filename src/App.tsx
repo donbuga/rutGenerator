@@ -15,30 +15,39 @@ const App: React.FC = () => {
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
 
   const generateRutList = () => {
-    const prefixes = [8, 15, 18, 20, 22]; // Agregar prefijo 22
+    const prefixes = [8, 15, 18, 20, 22];
     const newRuts: Record<number, string[]> = {};
 
     prefixes.forEach((prefix) => {
-      newRuts[prefix] = Array.from({ length: 10 }, () => {
+      const rutSet = new Set<string>();
+
+      while (rutSet.size < 10) {
+        let rut: string;
+
         if (prefix === 20) {
           // Generar un RUT con el prefijo 20 y DV fijo en 0
-          let rut;
+          let baseRut: number;
           do {
-            const baseRut = prefix * 1000000 + Math.floor(Math.random() * 1000000);
+            baseRut = prefix * 1000000 + Math.floor(Math.random() * 1000000);
             rut = `${baseRut}-${calculateDV(baseRut)}`;
-          } while (!rut.endsWith('-0')); // Asegurar que termine en -0
-          return rut;
-        }if (prefix === 22) {
+          } while (!rut.endsWith('-0'));
+        } else if (prefix === 22) {
           // Generar un RUT con el prefijo 22 y DV fijo en 8
-          let rut;
+          let baseRut: number;
           do {
-            const baseRut = prefix * 1000000 + Math.floor(Math.random() * 1000000);
+            baseRut = prefix * 1000000 + Math.floor(Math.random() * 1000000);
             rut = `${baseRut}-${calculateDV(baseRut)}`;
-          } while (!rut.endsWith('-8')); // Asegurar que termine en -8
-          return rut;
+          } while (!rut.endsWith('-8'));
+        } else {
+          rut = generateRut(prefix);
         }
-        return generateRut(prefix);
-      });
+
+        if (!rutSet.has(rut)) {
+          rutSet.add(rut);
+        }
+      }
+
+      newRuts[prefix] = Array.from(rutSet);
     });
 
     setRutsByPrefix(newRuts);
