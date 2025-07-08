@@ -15,7 +15,7 @@ const App: React.FC = () => {
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
 
   const generateRutList = () => {
-    const prefixes = [8, 15, 18, 20,22]; // Agregar prefijo 22
+    const prefixes = [8, 15, 18, 20, 22]; // Agregar prefijo 22
     const newRuts: Record<number, string[]> = {};
 
     prefixes.forEach((prefix) => {
