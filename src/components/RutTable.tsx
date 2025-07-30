@@ -49,7 +49,11 @@ const RutTable: React.FC<RutTableProps> = ({
                 </td>
               ))}
               <td
-                className="px-3 py-2 border-t text-gray-800 text-sm md:text-base md:px-4 cursor-pointer"
+                className={`px-3 py-2 border-t text-gray-800 text-sm md:text-base md:px-4 cursor-pointer ${
+                  usedRuts.includes(randomNumbers[rowIndex]?.toString())
+                    ? 'bg-green-100'
+                    : ''
+                }`}
                 onClick={() =>
                   randomNumbers[rowIndex] !== undefined &&
                   onCopy(randomNumbers[rowIndex].toString())
