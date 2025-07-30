@@ -13,10 +13,14 @@ const App: React.FC = () => {
     22: [],
   });
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
+  const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
 
   const generateRutList = () => {
     const prefixes = [8, 15, 18, 20,22]; // Agregar prefijo 22
     const newRuts: Record<number, string[]> = {};
+    const newRandoms: number[] = Array.from({ length: 10 }, () =>
+      Math.floor(100000000 + Math.random() * 900000000)
+    );
 
     prefixes.forEach((prefix) => {
       newRuts[prefix] = Array.from({ length: 10 }, () => {
@@ -42,6 +46,7 @@ const App: React.FC = () => {
     });
 
     setRutsByPrefix(newRuts);
+    setRandomNumbers(newRandoms);
     setUsedRuts([]); // Resetear RUTs usados
   };
 
@@ -67,7 +72,12 @@ const App: React.FC = () => {
             Generar RUTs
           </button>
         </div>
-        <RutTable rutsByPrefix={rutsByPrefix} usedRuts={usedRuts} onCopy={copyToClipboard} />
+        <RutTable
+          rutsByPrefix={rutsByPrefix}
+          usedRuts={usedRuts}
+          randomNumbers={randomNumbers}
+          onCopy={copyToClipboard}
+        />
       </main>
       <Footer />
     </div>
