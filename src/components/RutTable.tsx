@@ -48,7 +48,13 @@ const RutTable: React.FC<RutTableProps> = ({
                   {rutsByPrefix[parseInt(prefix)][rowIndex] || ''}
                 </td>
               ))}
-              <td className="px-3 py-2 border-t text-gray-800 text-sm md:text-base md:px-4">
+              <td
+                className="px-3 py-2 border-t text-gray-800 text-sm md:text-base md:px-4 cursor-pointer"
+                onClick={() =>
+                  randomNumbers[rowIndex] !== undefined &&
+                  onCopy(randomNumbers[rowIndex].toString())
+                }
+              >
                 {randomNumbers[rowIndex] || ''}
               </td>
             </tr>
