@@ -4,10 +4,16 @@ import { useMediaQuery } from 'react-responsive';
 interface RutTableProps {
   rutsByPrefix: Record<number, string[]>;
   usedRuts: string[];
+  randomNumbers: number[];
   onCopy: (rut: string) => void;
 }
 
-const RutTable: React.FC<RutTableProps> = ({ rutsByPrefix, usedRuts, onCopy }) => {
+const RutTable: React.FC<RutTableProps> = ({
+  rutsByPrefix,
+  usedRuts,
+  randomNumbers,
+  onCopy,
+}) => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const prefixes = Object.keys(rutsByPrefix);
   const displayPrefixes = isMobile ? prefixes.slice(-3) : prefixes;
@@ -18,8 +24,14 @@ const RutTable: React.FC<RutTableProps> = ({ rutsByPrefix, usedRuts, onCopy }) =
         <thead className="bg-gray-200 text-gray-600">
           <tr>
             {displayPrefixes.map((prefix) => (
-              <th key={prefix} className="px-3 py-2 text-left text-sm md:text-base md:px-4">{`${prefix}xxxxxx-x`}</th>
+              <th
+                key={prefix}
+                className="px-3 py-2 text-left text-sm md:text-base md:px-4"
+              >{`${prefix}xxxxxx-x`}</th>
             ))}
+            <th className="px-3 py-2 text-left text-sm md:text-base md:px-4">
+              Número aleatorio
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -36,6 +48,9 @@ const RutTable: React.FC<RutTableProps> = ({ rutsByPrefix, usedRuts, onCopy }) =
                   {rutsByPrefix[parseInt(prefix)][rowIndex] || ''}
                 </td>
               ))}
+              <td className="px-3 py-2 border-t text-gray-800 text-sm md:text-base md:px-4">
+                {randomNumbers[rowIndex] || ''}
+              </td>
             </tr>
           ))}
         </tbody>
