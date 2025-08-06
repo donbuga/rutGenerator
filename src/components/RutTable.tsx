@@ -32,10 +32,10 @@ const RutTable: React.FC<RutTableProps> = ({
               >{`${prefix}xxxxxx-x`}</th>
             ))}
             <th className="px-3 py-2 text-left text-sm md:text-base md:px-4">
-              Número aleatorio
+              random-num
             </th>
             <th className="px-3 py-2 text-left text-sm md:text-base md:px-4">
-              Email aleatorio
+              random-email
             </th>
           </tr>
         </thead>
