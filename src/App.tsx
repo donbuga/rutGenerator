@@ -4,6 +4,15 @@ import RutTable from './components/RutTable';
 import Footer from './components/Footer';
 import { generateRut, calculateDV } from './utils/rutUtils';
 
+const generateRandomEmail = (): string => {
+  const letters = Array.from({ length: 2 }, () =>
+    String.fromCharCode(97 + Math.floor(Math.random() * 26))
+  ).join('');
+  const numbers = Math.floor(1000 + Math.random() * 9000); // 4 dígitos
+  const domainNumbers = Math.floor(10 + Math.random() * 90); // 2 dígitos
+  return `${letters}${numbers}@${domainNumbers}.cl`;
+};
+
 const App: React.FC = () => {
   const [rutsByPrefix, setRutsByPrefix] = useState<Record<number, string[]>>({
     8: [],
@@ -14,6 +23,7 @@ const App: React.FC = () => {
   });
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
+  const [randomEmails, setRandomEmails] = useState<string[]>([]);
 
   const generateRutList = () => {
     const prefixes = [8, 15, 18, 20,22]; // Agregar prefijo 22
@@ -21,6 +31,7 @@ const App: React.FC = () => {
     const newRandoms: number[] = Array.from({ length: 10 }, () =>
       Math.floor(100000000 + Math.random() * 900000000)
     );
+    const newEmails: string[] = Array.from({ length: 10 }, generateRandomEmail);
 
     prefixes.forEach((prefix) => {
       newRuts[prefix] = Array.from({ length: 10 }, () => {
@@ -47,6 +58,7 @@ const App: React.FC = () => {
 
     setRutsByPrefix(newRuts);
     setRandomNumbers(newRandoms);
+    setRandomEmails(newEmails);
     setUsedRuts([]); // Resetear RUTs usados
   };
 
@@ -76,6 +88,7 @@ const App: React.FC = () => {
           rutsByPrefix={rutsByPrefix}
           usedRuts={usedRuts}
           randomNumbers={randomNumbers}
+          randomEmails={randomEmails}
           onCopy={copyToClipboard}
         />
       </main>
