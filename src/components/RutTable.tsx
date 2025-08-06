@@ -5,6 +5,7 @@ interface RutTableProps {
   rutsByPrefix: Record<number, string[]>;
   usedRuts: string[];
   randomNumbers: number[];
+  randomEmails: string[];
   onCopy: (rut: string) => void;
 }
 
@@ -12,6 +13,7 @@ const RutTable: React.FC<RutTableProps> = ({
   rutsByPrefix,
   usedRuts,
   randomNumbers,
+  randomEmails,
   onCopy,
 }) => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -31,6 +33,9 @@ const RutTable: React.FC<RutTableProps> = ({
             ))}
             <th className="px-3 py-2 text-left text-sm md:text-base md:px-4">
               Número aleatorio
+            </th>
+            <th className="px-3 py-2 text-left text-sm md:text-base md:px-4">
+              Email aleatorio
             </th>
           </tr>
         </thead>
@@ -60,6 +65,18 @@ const RutTable: React.FC<RutTableProps> = ({
                 }
               >
                 {randomNumbers[rowIndex] || ''}
+              </td>
+              <td
+                className={`px-3 py-2 border-t text-gray-800 text-sm md:text-base md:px-4 cursor-pointer ${
+                  usedRuts.includes(randomEmails[rowIndex])
+                    ? 'bg-green-100'
+                    : ''
+                }`}
+                onClick={() =>
+                  randomEmails[rowIndex] && onCopy(randomEmails[rowIndex])
+                }
+              >
+                {randomEmails[rowIndex] || ''}
               </td>
             </tr>
           ))}
