@@ -4,13 +4,22 @@ import RutTable from './components/RutTable';
 import Footer from './components/Footer';
 import { generateRut, calculateDV } from './utils/rutUtils';
 
-const generateRandomEmail = (): string => {
+const generateRandomEmail = (domain?: string): string => {
   const letters = Array.from({ length: 2 }, () =>
     String.fromCharCode(97 + Math.floor(Math.random() * 26))
   ).join('');
   const numbers = Math.floor(1000 + Math.random() * 9000); // 4 dígitos
-  const domainNumbers = Math.floor(10 + Math.random() * 90); // 2 dígitos
-  return `${letters}${numbers}@${domainNumbers}.cl`;
+  const emailDomain = domain ?? `${Math.floor(10 + Math.random() * 90)}.cl`;
+  return `${letters}${numbers}@${emailDomain}`;
+};
+
+const generateRandomEmails = (count: number): string[] => {
+  const half = Math.floor(count / 2);
+  const emails = [
+    ...Array.from({ length: half }, () => generateRandomEmail('gmail.com')),
+    ...Array.from({ length: count - half }, () => generateRandomEmail()),
+  ];
+  return emails.sort(() => Math.random() - 0.5);
 };
 
 const App: React.FC = () => {
@@ -31,7 +40,7 @@ const App: React.FC = () => {
     const newRandoms: number[] = Array.from({ length: 10 }, () =>
       Math.floor(100000000 + Math.random() * 900000000)
     );
-    const newEmails: string[] = Array.from({ length: 10 }, generateRandomEmail);
+    const newEmails: string[] = generateRandomEmails(10);
 
     prefixes.forEach((prefix) => {
       newRuts[prefix] = Array.from({ length: 10 }, () => {
