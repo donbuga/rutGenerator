@@ -38,7 +38,7 @@ const App: React.FC = () => {
     const prefixes = [8, 15, 18, 20,22]; // Agregar prefijo 22
     const newRuts: Record<number, string[]> = {};
     const newRandoms: number[] = Array.from({ length: 10 }, () =>
-      Math.floor(100000000 + Math.random() * 900000000)
+      Math.floor(980000000 + Math.random() * 10000000)
     );
     const newEmails: string[] = generateRandomEmails(10);
 
