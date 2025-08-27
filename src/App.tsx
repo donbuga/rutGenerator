@@ -52,13 +52,23 @@ const App: React.FC = () => {
             rut = `${baseRut}-${calculateDV(baseRut)}`;
           } while (!rut.endsWith('-0')); // Asegurar que termine en -0
           return rut;
-        }if (prefix === 22) {
+        }
+        if (prefix === 22) {
           // Generar un RUT con el prefijo 22 y DV fijo en 8
           let rut;
           do {
             const baseRut = prefix * 1000000 + Math.floor(Math.random() * 1000000);
             rut = `${baseRut}-${calculateDV(baseRut)}`;
           } while (!rut.endsWith('-8')); // Asegurar que termine en -8
+          return rut;
+        }
+        if (prefix === 18) {
+          // Generar un RUT con el prefijo 18 y DV fijo en 1
+          let rut;
+          do {
+            const baseRut = prefix * 1000000 + Math.floor(Math.random() * 1000000);
+            rut = `${baseRut}-${calculateDV(baseRut)}`;
+          } while (!rut.endsWith('-1')); // Asegurar que termine en -1
           return rut;
         }
         return generateRut(prefix);
