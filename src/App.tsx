@@ -29,13 +29,14 @@ const App: React.FC = () => {
     18: [],
     20: [],
     22: [],
+    25: [],
   });
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [randomEmails, setRandomEmails] = useState<string[]>([]);
 
   const generateRutList = () => {
-    const prefixes = [8, 15, 18, 20,22]; // Agregar prefijo 22
+    const prefixes = [8, 15, 18, 20, 22, 25];
     const newRuts: Record<number, string[]> = {};
     const newRandoms: number[] = Array.from({ length: 10 }, () =>
       Math.floor(980000000 + Math.random() * 10000000)
