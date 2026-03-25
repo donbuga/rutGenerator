@@ -34,6 +34,28 @@ const App: React.FC = () => {
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [randomEmails, setRandomEmails] = useState<string[]>([]);
+  const [showAgeTable, setShowAgeTable] = useState(false);
+
+  const ageRanges = [
+    { rutRange: '8M – 9M', age: '64–70' },
+    { rutRange: '9M – 10M', age: '60–64' },
+    { rutRange: '10M – 11M', age: '56–60' },
+    { rutRange: '11M – 12M', age: '52–56' },
+    { rutRange: '12M – 13M', age: '49–52' },
+    { rutRange: '13M – 14M', age: '46–49' },
+    { rutRange: '14M – 15M', age: '43–46' },
+    { rutRange: '15M – 16M', age: '40–43' },
+    { rutRange: '16M – 17M', age: '37–40' },
+    { rutRange: '17M – 18M', age: '34–37' },
+    { rutRange: '18M – 19M', age: '31–34' },
+    { rutRange: '19M – 20M', age: '28–31' },
+    { rutRange: '20M – 21M', age: '25–28' },
+    { rutRange: '21M – 22M', age: '22–25' },
+    { rutRange: '22M – 23M', age: '19–22' },
+    { rutRange: '23M – 24M', age: '16–19' },
+    { rutRange: '24M – 25M', age: '13–16' },
+    { rutRange: '25M – 26M', age: '10–13' },
+  ];
 
   const generateRutList = () => {
     const prefixes = [8, 15, 18, 20, 22, 25];
@@ -111,6 +133,39 @@ const App: React.FC = () => {
           randomEmails={randomEmails}
           onCopy={copyToClipboard}
         />
+        <div className="max-w-2xl mx-auto mt-6">
+          <button
+            type="button"
+            onClick={() => setShowAgeTable((prev) => !prev)}
+            className="w-full flex items-center justify-between bg-white px-4 py-3 rounded shadow-md hover:bg-gray-50 transition"
+            aria-expanded={showAgeTable}
+            aria-controls="age-rut-table"
+          >
+            <span className="font-semibold">Edades aproximadas por rut</span>
+            <span className="text-sm">{showAgeTable ? '▲' : '▼'}</span>
+          </button>
+
+          {showAgeTable && (
+            <div id="age-rut-table" className="bg-white shadow-md rounded mt-2 overflow-hidden">
+              <table className="table-auto w-full">
+                <thead className="bg-gray-200 text-gray-600">
+                  <tr>
+                    <th className="px-4 py-2 text-left">Tramo RUT</th>
+                    <th className="px-4 py-2 text-right">Edad aprox. en 2026</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ageRanges.map(({ rutRange, age }) => (
+                    <tr key={rutRange} className="border-t">
+                      <td className="px-4 py-2 font-semibold">{rutRange}</td>
+                      <td className="px-4 py-2 text-right font-semibold">{age}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </main>
       <Footer />
     </div>
