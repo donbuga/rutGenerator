@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from './components/Header';
 import RutTable from './components/RutTable';
 import Footer from './components/Footer';
@@ -35,6 +35,8 @@ const App: React.FC = () => {
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [randomEmails, setRandomEmails] = useState<string[]>([]);
   const [showAgeTable, setShowAgeTable] = useState(false);
+  const [copyToastVisible, setCopyToastVisible] = useState(false);
+  const copyToastTimeoutRef = useRef<number | null>(null);
 
   const ageRanges = [
     { rutRange: '8M – 9M', age: '64–70' },
@@ -104,18 +106,38 @@ const App: React.FC = () => {
     setUsedRuts([]); // Resetear RUTs usados
   };
 
-  React.useEffect(() => {
-  generateRutList();
+  useEffect(() => {
+    generateRutList();
+
+    return () => {
+      if (copyToastTimeoutRef.current) {
+        window.clearTimeout(copyToastTimeoutRef.current);
+      }
+    };
   }, []);
 
   const copyToClipboard = (rut: string) => {
     navigator.clipboard.writeText(rut).then(() => {
       setUsedRuts((prev) => [...prev, rut]);
+      setCopyToastVisible(false);
+
+      if (copyToastTimeoutRef.current) {
+        window.clearTimeout(copyToastTimeoutRef.current);
+      }
+
+      window.requestAnimationFrame(() => {
+        setCopyToastVisible(true);
+      });
+
+      copyToastTimeoutRef.current = window.setTimeout(() => {
+        setCopyToastVisible(false);
+        copyToastTimeoutRef.current = null;
+      }, 1100);
     });
   };
 
   return (
-    <div className="font-sans text-gray-800 bg-gray-100 min-h-screen">
+    <div className="font-sans text-gray-800 bg-gray-100 min-h-screen relative">
       <Header />
       <main className="p-6">
         <div className="text-center mb-6">
@@ -168,6 +190,11 @@ const App: React.FC = () => {
         </div>
       </main>
       <Footer />
+      <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" aria-hidden="true">
+        <span className={copyToastVisible ? 'copy-toast-message copy-toast-message--active' : 'copy-toast-message'}>
+          Copiado
+        </span>
+      </div>
     </div>
   );
 };

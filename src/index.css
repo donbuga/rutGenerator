@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -16,3 +18,38 @@ code {
     monospace;
 }
 
+.copy-toast-message {
+  opacity: 0;
+  color: #fff6a9;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1.4rem, 5.2vw, 3.2rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow:
+    0 2px 0 #7f1d1d,
+    0 0 6px #f97316,
+    0 0 18px rgba(251, 191, 36, 0.85),
+    2px 2px 0 #312e81;
+  user-select: none;
+}
+
+.copy-toast-message--active {
+  animation: copyFadeOut 1.1s ease forwards;
+}
+
+@keyframes copyFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  70% {
+    opacity: 0.85;
+    transform: translateY(-6px) scale(1.01);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-14px) scale(1.04);
+  }
+}
