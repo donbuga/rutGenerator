@@ -34,30 +34,19 @@ const App: React.FC = () => {
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [randomEmails, setRandomEmails] = useState<string[]>([]);
-  const [showAgeTable, setShowAgeTable] = useState(false);
+  const [rutAgeInput, setRutAgeInput] = useState('');
   const [copyToastVisible, setCopyToastVisible] = useState(false);
   const copyToastTimeoutRef = useRef<number | null>(null);
 
-  const ageRanges = [
-    { rutRange: '8M – 9M', age: '64–70' },
-    { rutRange: '9M – 10M', age: '60–64' },
-    { rutRange: '10M – 11M', age: '56–60' },
-    { rutRange: '11M – 12M', age: '52–56' },
-    { rutRange: '12M – 13M', age: '49–52' },
-    { rutRange: '13M – 14M', age: '46–49' },
-    { rutRange: '14M – 15M', age: '43–46' },
-    { rutRange: '15M – 16M', age: '40–43' },
-    { rutRange: '16M – 17M', age: '37–40' },
-    { rutRange: '17M – 18M', age: '34–37' },
-    { rutRange: '18M – 19M', age: '31–34' },
-    { rutRange: '19M – 20M', age: '28–31' },
-    { rutRange: '20M – 21M', age: '25–28' },
-    { rutRange: '21M – 22M', age: '22–25' },
-    { rutRange: '22M – 23M', age: '19–22' },
-    { rutRange: '23M – 24M', age: '16–19' },
-    { rutRange: '24M – 25M', age: '13–16' },
-    { rutRange: '25M – 26M', age: '10–13' },
-  ];
+  const rutWithoutVerifier = rutAgeInput.includes('-')
+    ? rutAgeInput.split('-')[0].replace(/\D/g, '')
+    : rutAgeInput.replace(/\D/g, '').slice(0, 8);
+  const numericRut = Number(rutWithoutVerifier);
+  const hasValidRutNumber = Number.isFinite(numericRut) && numericRut > 0;
+  const estimatedBirthYear = hasValidRutNumber
+    ? Math.round(1930 + 3.5 * (numericRut / 1000000))
+    : null;
+  const estimatedAge = estimatedBirthYear !== null ? Math.round(2026 - estimatedBirthYear) : null;
 
   const generateRutList = () => {
     const prefixes = [8, 15, 18, 20, 22, 25];
@@ -155,39 +144,47 @@ const App: React.FC = () => {
           randomEmails={randomEmails}
           onCopy={copyToClipboard}
         />
-        <div className="max-w-2xl mx-auto mt-6">
-          <button
-            type="button"
-            onClick={() => setShowAgeTable((prev) => !prev)}
-            className="w-full flex items-center justify-between bg-white px-4 py-3 rounded shadow-md hover:bg-gray-50 transition"
-            aria-expanded={showAgeTable}
-            aria-controls="age-rut-table"
-          >
-            <span className="font-semibold">Edades aproximadas por rut</span>
-            <span className="text-sm">{showAgeTable ? '▲' : '▼'}</span>
-          </button>
+        <section className="max-w-2xl mx-auto mt-6 bg-white rounded-lg shadow-md p-5 sm:p-6">
+          <div className="mb-5">
+            <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Estimador de edad</p>
+            <h2 className="text-2xl font-bold text-gray-800 mt-1">Calcula la edad aproximada por RUT</h2>
+            <p className="text-gray-600 mt-2">
+              Ingresa un RUT chileno con puntos, guion o solo números para ver la estimación automáticamente.
+            </p>
+          </div>
 
-          {showAgeTable && (
-            <div id="age-rut-table" className="bg-white shadow-md rounded mt-2 overflow-hidden">
-              <table className="table-auto w-full">
-                <thead className="bg-gray-200 text-gray-600">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Tramo RUT</th>
-                    <th className="px-4 py-2 text-right">Edad aprox. en 2026</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ageRanges.map(({ rutRange, age }) => (
-                    <tr key={rutRange} className="border-t">
-                      <td className="px-4 py-2 font-semibold">{rutRange}</td>
-                      <td className="px-4 py-2 text-right font-semibold">{age}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <label htmlFor="rut-age-input" className="block text-sm font-semibold text-gray-700 mb-2">
+            RUT
+          </label>
+          <input
+            id="rut-age-input"
+            type="text"
+            inputMode="text"
+            value={rutAgeInput}
+            onChange={(event) => setRutAgeInput(event.target.value)}
+            placeholder="Ej: 12.345.678-9"
+            className="w-full rounded border border-gray-300 px-4 py-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          />
+
+          <div className="grid gap-3 sm:grid-cols-3 mt-5">
+            <div className="rounded bg-gray-50 p-4 border border-gray-200">
+              <p className="text-xs uppercase tracking-wide text-gray-500">RUT ingresado</p>
+              <p className="text-lg font-semibold text-gray-800 break-words">{rutAgeInput || '—'}</p>
             </div>
-          )}
-        </div>
+            <div className="rounded bg-gray-50 p-4 border border-gray-200">
+              <p className="text-xs uppercase tracking-wide text-gray-500">Año estimado</p>
+              <p className="text-lg font-semibold text-gray-800">{estimatedBirthYear ?? '—'}</p>
+            </div>
+            <div className="rounded bg-blue-50 p-4 border border-blue-100">
+              <p className="text-xs uppercase tracking-wide text-blue-600">Edad estimada</p>
+              <p className="text-lg font-semibold text-blue-700">{estimatedAge !== null ? `${estimatedAge} años` : '—'}</p>
+            </div>
+          </div>
+
+          <p className="mt-5 text-sm text-gray-600 bg-yellow-50 border border-yellow-200 rounded p-3">
+            Este cálculo es una estimación basada en el número de RUT y puede presentar un margen de error de varios años.
+          </p>
+        </section>
       </main>
       <Footer />
       <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" aria-hidden="true">
