@@ -22,6 +22,11 @@ const generateRandomEmails = (count: number): string[] => {
   return emails.sort(() => Math.random() - 0.5);
 };
 
+const tabs = [
+  { id: 'ruts', label: 'Tabla de RUTs' },
+  { id: 'edad', label: 'Estimador de edad' },
+];
+
 const App: React.FC = () => {
   const [rutsByPrefix, setRutsByPrefix] = useState<Record<number, string[]>>({
     8: [],
@@ -34,6 +39,7 @@ const App: React.FC = () => {
   const [usedRuts, setUsedRuts] = useState<string[]>([]);
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [randomEmails, setRandomEmails] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
   const [rutAgeInput, setRutAgeInput] = useState('');
   const [copyToastVisible, setCopyToastVisible] = useState(false);
   const copyToastTimeoutRef = useRef<number | null>(null);
@@ -125,29 +131,84 @@ const App: React.FC = () => {
     });
   };
 
+  const handleTabKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const currentIndex = tabs.findIndex((tab) => tab.id === activeTab);
+    let nextIndex: number;
+
+    switch (event.key) {
+      case 'ArrowLeft':
+        nextIndex = (currentIndex + tabs.length - 1) % tabs.length;
+        break;
+      case 'ArrowRight':
+        nextIndex = (currentIndex + 1) % tabs.length;
+        break;
+      case 'Home':
+        nextIndex = 0;
+        break;
+      case 'End':
+        nextIndex = tabs.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    setActiveTab(tabs[nextIndex].id);
+    event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')[nextIndex].focus();
+  };
+
   return (
     <div className="font-sans text-gray-800 bg-gray-100 min-h-screen relative">
       <Header />
       <main className="p-6">
-        <div className="text-center mb-6">
-          <button
-            onClick={generateRutList}
-            className="bg-blue-500 text-white px-6 py-2 rounded shadow-md hover:bg-blue-600 transition"
-          >
-            Generar RUTs
-          </button>
+        <div
+          role="tablist"
+          aria-label="Herramientas de RUT"
+          onKeyDown={handleTabKeyDown}
+          className="mx-auto mb-6 grid max-w-md grid-cols-2 gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm"
+        >
+          {tabs.map(({ id, label }) => (
+            <button
+              key={id}
+              id={`tab-${id}`}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === id}
+              aria-controls={`panel-${id}`}
+              tabIndex={activeTab === id ? 0 : -1}
+              onClick={() => setActiveTab(id)}
+              className="rounded-lg px-2 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 aria-selected:bg-blue-700 aria-selected:text-white sm:px-4"
+            >
+              {label}
+            </button>
+          ))}
         </div>
-        <RutTable
-          rutsByPrefix={rutsByPrefix}
-          usedRuts={usedRuts}
-          randomNumbers={randomNumbers}
-          randomEmails={randomEmails}
-          onCopy={copyToClipboard}
-        />
-        <section className="max-w-2xl mx-auto mt-6 bg-white rounded-lg shadow-md p-5 sm:p-6">
+        <section id="panel-ruts" role="tabpanel" aria-labelledby="tab-ruts" hidden={activeTab !== 'ruts'}>
+          <div className="text-center mb-6">
+            <button
+              onClick={generateRutList}
+              className="bg-blue-500 text-white px-6 py-2 rounded shadow-md hover:bg-blue-600 transition"
+            >
+              Generar RUTs
+            </button>
+          </div>
+          <RutTable
+            rutsByPrefix={rutsByPrefix}
+            usedRuts={usedRuts}
+            randomNumbers={randomNumbers}
+            randomEmails={randomEmails}
+            onCopy={copyToClipboard}
+          />
+        </section>
+        <section
+          id="panel-edad"
+          role="tabpanel"
+          aria-labelledby="tab-edad"
+          hidden={activeTab !== 'edad'}
+          className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-5 sm:p-6"
+        >
           <div className="mb-5">
-            <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Estimador de edad</p>
-            <h2 className="text-2xl font-bold text-gray-800 mt-1">Calcula la edad aproximada por RUT</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Calcula la edad aproximada por RUT</h2>
             <p className="text-gray-600 mt-2">
               Ingresa un RUT chileno con puntos, guion o solo números para ver la estimación automáticamente.
             </p>
